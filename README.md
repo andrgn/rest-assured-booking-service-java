@@ -1,3 +1,3 @@
-# rest-assured-restful-booker-demo
+# API doc
 
 https://restful-booker.herokuapp.com/apidoc/index.html
