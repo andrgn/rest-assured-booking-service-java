@@ -29,10 +29,10 @@ import static utils.Steps.postBooking;
 class Tests_getBookingPositiveCases {
 
     @Test
-    @DisplayName("getBooking соответсвует схеме")
+    @DisplayName("getBooking соответствует схеме")
     void getBookingResponseMatchesToSchema() {
-        Booking newBooking = getDefaultBooking();
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var newBooking = getDefaultBooking();
+        var createBookingResponse = postBooking(newBooking);
 
         when().
                 get(BOOKING_BY_ID, createBookingResponse.getBookingId()).
@@ -43,8 +43,8 @@ class Tests_getBookingPositiveCases {
     @Test
     @DisplayName("getBooking возвращает 200")
     void getBookingReturns200() {
-        Booking newBooking = getDefaultBooking();
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var newBooking = getDefaultBooking();
+        var createBookingResponse = postBooking(newBooking);
 
         when().
                 get(BOOKING_BY_ID, createBookingResponse.getBookingId()).
@@ -56,9 +56,9 @@ class Tests_getBookingPositiveCases {
     @DisplayName("getBooking возвращает верный firstname")
     @ValueSource(strings = { "Bill", "Дмитрий" })
     void getBookingReturnsCorrectFirstname(String firstname) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setFirstname(firstname);
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var createBookingResponse = postBooking(newBooking);
 
         Booking response = when().
                 get(BOOKING_BY_ID, createBookingResponse.getBookingId()).
@@ -74,9 +74,9 @@ class Tests_getBookingPositiveCases {
     @DisplayName("getBooking возвращает верный lastname")
     @ValueSource(strings = { "Jackson", "Петров" })
     void getBookingReturnsCorrectLastname(String lastname) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setLastname(lastname);
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var createBookingResponse = postBooking(newBooking);
 
         Booking response = when().
                 get(BOOKING_BY_ID, createBookingResponse.getBookingId()).
@@ -97,11 +97,11 @@ class Tests_getBookingPositiveCases {
             "Завтрак, обед, ужин"
     })
     void getBookingReturnsCorrectAdditionalNeeds(String additionalNeeds) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setAdditionalNeeds(additionalNeeds);
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var createBookingResponse = postBooking(newBooking);
 
-        Booking response = when().
+        var response = when().
                 get(BOOKING_BY_ID, createBookingResponse.getBookingId()).
         then().
                 extract().as(Booking.class);
@@ -115,11 +115,11 @@ class Tests_getBookingPositiveCases {
     @DisplayName("getBooking возвращает верный totalprice")
     @ValueSource(ints = { 0, 5, 100, 5_000_000 })
     void getBookingReturnsCorrectTotalPrice(Integer totalPrice) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setTotalPrice(totalPrice);
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var createBookingResponse = postBooking(newBooking);
 
-        Booking response = when().
+        var response = when().
                 get(BOOKING_BY_ID, createBookingResponse.getBookingId()).
         then().
                 extract().as(Booking.class);
@@ -133,11 +133,11 @@ class Tests_getBookingPositiveCases {
     @DisplayName("getBooking возвращает верный depositpaid")
     @ValueSource(booleans = { true, false })
     void getBookingReturnsCorrectDepositPaid(Boolean depositPaid) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setDepositPaid(depositPaid);
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var createBookingResponse = postBooking(newBooking);
 
-        Booking response = when().
+        var response = when().
                 get(BOOKING_BY_ID, createBookingResponse.getBookingId()).
         then().
                 extract().as(Booking.class);
@@ -158,13 +158,13 @@ class Tests_getBookingPositiveCases {
     @DisplayName("getBooking возвращает верный bookingdates.checkin")
     @MethodSource("checkinProvider")
     void getBookingReturnsCorrectCheckin(LocalDate checkin) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setBookingDates(new Booking.BookingDates()
                         .setCheckin(checkin)
                         .setCheckout(LocalDate.now()));
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var createBookingResponse = postBooking(newBooking);
 
-        Booking response = when().
+        var response = when().
                 get(BOOKING_BY_ID, createBookingResponse.getBookingId()).
         then().
                 extract().as(Booking.class);
@@ -185,13 +185,13 @@ class Tests_getBookingPositiveCases {
     @DisplayName("getBooking возвращает верный bookingdates.checkout")
     @MethodSource("checkoutProvider")
     void getBookingReturnsCorrectCheckout(LocalDate checkout) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setBookingDates(new Booking.BookingDates()
                         .setCheckin(LocalDate.now())
                         .setCheckout(checkout));
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var createBookingResponse = postBooking(newBooking);
 
-        Booking response = when().
+        var response = when().
                 get(BOOKING_BY_ID, createBookingResponse.getBookingId()).
         then().
                 extract().as(Booking.class);

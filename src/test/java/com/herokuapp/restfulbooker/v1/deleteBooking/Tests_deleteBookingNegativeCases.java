@@ -78,8 +78,8 @@ class Tests_deleteBookingNegativeCases {
     @Test
     @DisplayName("deleteBooking возвращает 403 если пользователь не авторизован")
     void deleteBookingReturns403IfUserIsNotAuthorized() {
-        Booking newBooking = getDefaultBooking();
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var newBooking = getDefaultBooking();
+        var createBookingResponse = postBooking(newBooking);
 
         given().
                 contentType(JSON).
@@ -92,8 +92,8 @@ class Tests_deleteBookingNegativeCases {
     @Test
     @DisplayName("deleteBooking возвращает сообщение об ошибке если пользователь не авторизован")
     void deleteBookingReturnsErrorMessageIfUserIsNotAuthorized() {
-        Booking newBooking = getDefaultBooking();
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var newBooking = getDefaultBooking();
+        var createBookingResponse = postBooking(newBooking);
 
         given().
                 contentType(JSON).

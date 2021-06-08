@@ -24,8 +24,8 @@ class Tests_deleteBookingPositiveCases {
     @Test
     @DisplayName("deleteBooking возвращает 201")
     void deleteBookingReturns201() {
-        Booking newBooking = getDefaultBooking();
-        BookingResponse createBookingResponse = postBooking(newBooking);
+        var newBooking = getDefaultBooking();
+        var createBookingResponse = postBooking(newBooking);
 
         given().
                 contentType(JSON).

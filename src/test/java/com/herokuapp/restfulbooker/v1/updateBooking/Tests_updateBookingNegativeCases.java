@@ -29,7 +29,7 @@ class Tests_updateBookingNegativeCases {
     @DisplayName("updateBooking возвращает 405 если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void updateBookingReturns405IfBookingIdIsInvalid(Integer bookingId) {
-        Booking updatedBooking = getDefaultBooking();
+        var updatedBooking = getDefaultBooking();
 
         given().
                 contentType(JSON).
@@ -45,7 +45,7 @@ class Tests_updateBookingNegativeCases {
     @DisplayName("updatedBooking возвращает сообщение об ошибке если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void updateBookingReturnsErrorMessageIfBookingIdIsInvalid(Integer bookingId) {
-        Booking updatedBooking = getDefaultBooking();
+        var updatedBooking = getDefaultBooking();
 
         given().
                 contentType(JSON).
@@ -60,7 +60,7 @@ class Tests_updateBookingNegativeCases {
     @Test
     @DisplayName("updateBooking возвращает 405 если передали несуществующий bookingId")
     void updateBookingReturns405IfBookingIsNonexistent() {
-        Booking updateBooking = getDefaultBooking();
+        var updateBooking = getDefaultBooking();
 
         given().
                 contentType(JSON).
@@ -75,7 +75,7 @@ class Tests_updateBookingNegativeCases {
     @Test
     @DisplayName("updatedBooking возвращает сообщение об ошибке если передали несуществующий bookingId")
     void updatedBookingReturnsErrorMessageIfBookingIdIsNonexistent() {
-        Booking updatedBooking = getDefaultBooking();
+        var updatedBooking = getDefaultBooking();
 
         given().
                 contentType(JSON).
@@ -90,10 +90,10 @@ class Tests_updateBookingNegativeCases {
     @Test
     @DisplayName("updateBooking возвращает 403 если пользователь не авторизован")
     void updateBookingReturn403IfUserIsNotAuthorized() {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setFirstname("Bill");
-        BookingResponse createBookingResponse = postBooking(newBooking);
-        Booking updatedBooking = newBooking
+        var createBookingResponse = postBooking(newBooking);
+        var updatedBooking = newBooking
                 .setFirstname("John");
 
         given().
@@ -108,10 +108,10 @@ class Tests_updateBookingNegativeCases {
     @Test
     @DisplayName("updatedBooking возвращает сообщение об ошибке если пользователь не авторизован")
     void updateBookingReturnsErrorMessageIfUserNonAuthorized() {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setFirstname("Bill");
-        BookingResponse createBookingResponse = postBooking(newBooking);
-        Booking updatedBooking = newBooking
+        var createBookingResponse = postBooking(newBooking);
+        var updatedBooking = newBooking
                 .setFirstname("John");
 
         given().

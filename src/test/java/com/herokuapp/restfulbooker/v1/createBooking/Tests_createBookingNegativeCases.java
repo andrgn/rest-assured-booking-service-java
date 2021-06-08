@@ -20,7 +20,7 @@ class Tests_createBookingNegativeCases {
     @Test
     @DisplayName("createBooking возвращает 500 если передали null для firstname")
     void createBookingReturns500IfFirstnameIsNull() {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setFirstname(null);
 
         given().
@@ -35,7 +35,7 @@ class Tests_createBookingNegativeCases {
     @Test
     @DisplayName("createBooking возвращает 500 если передали null для lastname")
     void createBookingReturns500IfLastnameIsNull() {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setLastname(null);
 
         given().
@@ -50,7 +50,7 @@ class Tests_createBookingNegativeCases {
     @Test
     @DisplayName("createBooking возвращает 500 если передали null для depositpaid")
     void createBookingReturns500IfDepositPaidIsNull() {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setDepositPaid(null);
 
         given().
@@ -65,7 +65,7 @@ class Tests_createBookingNegativeCases {
     @Test
     @DisplayName("createBooking возвращает 500 если передали null для bookingdates")
     void createBookingReturns500IfBookingDatesIsNull() {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setBookingDates(null);
 
         given().
@@ -80,7 +80,7 @@ class Tests_createBookingNegativeCases {
     @Test
     @DisplayName("createBooking возвращает 500 если передали null для bookingdates.checkin")
     void createBookingReturns500IfBookingDatesCheckinIsNull() {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setBookingDates(new Booking.BookingDates()
                         .setCheckin(null)
                         .setCheckout(LocalDate.now()));
@@ -97,7 +97,7 @@ class Tests_createBookingNegativeCases {
     @Test
     @DisplayName("createBooking возвращает 500 если передали null для bookingdates.checkout")
     void createBookingReturns500IfBookingDatesCheckoutIsNull() {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setBookingDates(new Booking.BookingDates()
                         .setCheckin(LocalDate.now())
                         .setCheckout(null));

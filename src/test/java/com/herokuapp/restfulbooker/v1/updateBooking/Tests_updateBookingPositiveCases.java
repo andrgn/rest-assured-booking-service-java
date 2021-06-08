@@ -32,10 +32,10 @@ class Tests_updateBookingPositiveCases {
     @Test
     @DisplayName("updateBooking соотвествует схеме")
     void updateBookingMatchesToSchema() {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setFirstname("Bill");
-        BookingResponse createBookingResponse = postBooking(newBooking);
-        Booking updatedBooking = newBooking
+        var createBookingResponse = postBooking(newBooking);
+        var updatedBooking = newBooking
                 .setFirstname("John");
 
         given().
@@ -51,10 +51,10 @@ class Tests_updateBookingPositiveCases {
     @Test
     @DisplayName("updateBooking возвращает 200")
     void updateBookingReturns200() {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setFirstname("Bill");
-        BookingResponse createBookingResponse = postBooking(newBooking);
-        Booking updatedBooking = newBooking
+        var createBookingResponse = postBooking(newBooking);
+        var updatedBooking = newBooking
                 .setFirstname("John");
 
         given().
@@ -71,13 +71,13 @@ class Tests_updateBookingPositiveCases {
     @DisplayName("updateBooking возращает обновленный firstname")
     @ValueSource(strings = { "John", "Дмитрий" })
     void updateBookingReturnsUpdatedFirstname(String newFirstname) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setFirstname("Bill");
-        BookingResponse createBookingResponse = postBooking(newBooking);
-        Booking updatedBooking = newBooking
+        var createBookingResponse = postBooking(newBooking);
+        var updatedBooking = newBooking
                 .setFirstname(newFirstname);
 
-        Booking response = given().
+        var response = given().
                 contentType(JSON).
                 auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
                 body(updatedBooking).
@@ -94,13 +94,13 @@ class Tests_updateBookingPositiveCases {
     @DisplayName("updateBooking возвращает обновленный lastname")
     @ValueSource(strings = { "Smith", "Иванов" })
     void updateBookingReturnsUpdatedLastname(String newLastname) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setLastname("Jackson");
-        BookingResponse createBookingResponse = postBooking(newBooking);
-        Booking updatedBooking = newBooking
+        var createBookingResponse = postBooking(newBooking);
+        var updatedBooking = newBooking
                 .setLastname(newLastname);
 
-        Booking response = given().
+        var response = given().
                 contentType(JSON).
                 auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
                 body(updatedBooking).
@@ -122,13 +122,13 @@ class Tests_updateBookingPositiveCases {
             "Завтрак, обед, ужин"
     })
     void updateBookingReturnsUpdatedAdditionalNeeds(String newAdditionalNeeds) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setAdditionalNeeds("Old additional needs");
-        BookingResponse createBookingResponse = postBooking(newBooking);
-        Booking updatedBooking = newBooking
+        var createBookingResponse = postBooking(newBooking);
+        var updatedBooking = newBooking
                 .setAdditionalNeeds(newAdditionalNeeds);
 
-        Booking response = given().
+        var response = given().
                 contentType(JSON).
                 auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
                 body(updatedBooking).
@@ -145,13 +145,13 @@ class Tests_updateBookingPositiveCases {
     @DisplayName("updateBooking возвращает обновленный totalprice")
     @ValueSource(ints = { 0, 5, 100, 5_000_000 })
     void updateBookingReturnsUpdatedTotalPrice(Integer newTotalPrice) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setTotalPrice(123);
-        BookingResponse createBookingResponse = postBooking(newBooking);
-        Booking updatedBooking = newBooking
+        var createBookingResponse = postBooking(newBooking);
+        var updatedBooking = newBooking
                 .setTotalPrice(newTotalPrice);
 
-        Booking response = given().
+        var response = given().
                 contentType(JSON).
                 auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
                 body(updatedBooking).
@@ -171,13 +171,13 @@ class Tests_updateBookingPositiveCases {
             "false, true"
     })
     void updateBookingReturnsUpdatedDepositPaid(Boolean oldDepositPaid, Boolean newDepositPaid) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setDepositPaid(oldDepositPaid);
-        BookingResponse createBookingResponse = postBooking(newBooking);
-        Booking updatedBooking = newBooking
+        var createBookingResponse = postBooking(newBooking);
+        var updatedBooking = newBooking
                 .setDepositPaid(newDepositPaid);
 
-        Booking response = given().
+        var response = given().
                 contentType(JSON).
                 auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
                 body(updatedBooking).
@@ -202,16 +202,16 @@ class Tests_updateBookingPositiveCases {
     @DisplayName("updateBooking возвращает обновленый bookingdates.checkin")
     @MethodSource("checkinProvider")
     void updateBookingReturnsUpdatedBookingDatesCheckin(LocalDate newCheckin) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setBookingDates(new Booking.BookingDates()
                         .setCheckin(LocalDate.parse("2021-01-01"))
                         .setCheckout(LocalDate.now()));
-        BookingResponse createBookingResponse = postBooking(newBooking);
-        Booking updatedBooking = newBooking
+        var createBookingResponse = postBooking(newBooking);
+        var updatedBooking = newBooking
                 .setBookingDates(newBooking.getBookingDates()
                         .setCheckin(newCheckin));
 
-        Booking response = given().
+        var response = given().
                 contentType(JSON).
                 auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
                 body(updatedBooking).
@@ -236,16 +236,16 @@ class Tests_updateBookingPositiveCases {
     @DisplayName("updateBooking возвращает обновленный bookingdates.checkout")
     @MethodSource("checkoutProvider")
     void updateBookingReturnsUpdatedBookingDatesCheckout(LocalDate newCheckout) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setBookingDates(new Booking.BookingDates()
                         .setCheckin(LocalDate.now())
                         .setCheckout(LocalDate.parse("2021-01-01")));
-        BookingResponse createBookingResponse = postBooking(newBooking);
-        Booking updatedBooking = newBooking
+        var createBookingResponse = postBooking(newBooking);
+        var updatedBooking = newBooking
                 .setBookingDates(newBooking.getBookingDates()
                         .setCheckout(newCheckout));
 
-        Booking response = given().
+        var response = given().
                 contentType(JSON).
                 auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
                 body(updatedBooking).

@@ -9,14 +9,20 @@ import java.time.LocalDate;
 @Data
 @Accessors(chain = true)
 public class Booking {
+
     String firstname;
+
     String lastname;
+
     @JsonProperty("totalprice")
     Integer totalPrice;
+
     @JsonProperty("depositpaid")
     Boolean depositPaid;
+
     @JsonProperty("additionalneeds")
     String additionalNeeds;
+
     @JsonProperty("bookingdates")
     BookingDates bookingDates;
 

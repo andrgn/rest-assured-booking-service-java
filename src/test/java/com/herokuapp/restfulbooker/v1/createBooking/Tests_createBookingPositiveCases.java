@@ -28,7 +28,7 @@ class Tests_createBookingPositiveCases {
     @Test
     @DisplayName("Ответ createBooking соответсвует схеме")
     void createBookingResponseMatchesToSchema() {
-        Booking newBooking = getDefaultBooking();
+        var newBooking = getDefaultBooking();
 
         given().
                 contentType(JSON).
@@ -42,7 +42,7 @@ class Tests_createBookingPositiveCases {
     @Test
     @DisplayName("createBooking возвращает 200")
     void createBookingReturns200() {
-        Booking newBooking = getDefaultBooking();
+        var newBooking = getDefaultBooking();
 
         given().
                 contentType(JSON).
@@ -57,7 +57,7 @@ class Tests_createBookingPositiveCases {
     @DisplayName("createBooking возращает верный firstname")
     @ValueSource(strings = { "Bill", "Дмитрий" })
     void createBookingReturnsCorrectFirstname(String firstname) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setFirstname(firstname);
 
         BookingResponse response = given().
@@ -77,7 +77,7 @@ class Tests_createBookingPositiveCases {
     @DisplayName("createBooking возращает верный lastname")
     @ValueSource(strings = { "Jackson", "Петров" })
     void createBookingReturnsCorrectLastname(String lastname) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setLastname(lastname);
 
         BookingResponse response = given().
@@ -102,7 +102,7 @@ class Tests_createBookingPositiveCases {
             "Завтрак, обед, ужин"
     })
     void createBookingReturnsCorrectAdditionalNeeds(String additionalneeds) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setAdditionalNeeds(additionalneeds);
 
         BookingResponse response = given().
@@ -122,10 +122,10 @@ class Tests_createBookingPositiveCases {
     @DisplayName("createBooking возвращает верный totalprice")
     @ValueSource(ints = { 0, 5, 100, 5_000_000 })
     void createBookingReturnsCorrectTotalPrice(Integer totalPrice) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setTotalPrice(totalPrice);
 
-        BookingResponse response = given().
+        var response = given().
                 contentType(JSON).
                 body(newBooking).
         when().
@@ -142,10 +142,10 @@ class Tests_createBookingPositiveCases {
     @DisplayName("createBooking возвращает верный depositpaid")
     @ValueSource(booleans = { true, false })
     void createBookingReturnsCorrectDepositPaid(Boolean depositPaid) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setDepositPaid(depositPaid);
 
-        BookingResponse response = given().
+        var response = given().
                 contentType(JSON).
                 body(newBooking).
         when().
@@ -169,12 +169,12 @@ class Tests_createBookingPositiveCases {
     @DisplayName("createBooking возвращает верный bookingdates.checkin")
     @MethodSource("checkinProvider")
     void createBookingReturnsCorrectCheckin(LocalDate checkin) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setBookingDates(new Booking.BookingDates()
                         .setCheckin(checkin)
                         .setCheckout(LocalDate.now()));
 
-        BookingResponse response = given().
+        var response = given().
                 contentType(JSON).
                 body(newBooking).
         when().
@@ -198,12 +198,12 @@ class Tests_createBookingPositiveCases {
     @DisplayName("createBooking возвращает верный bookingdates.checkout")
     @MethodSource("checkoutProvider")
     void createBookingReturnsCorrectCheckout(LocalDate checkout) {
-        Booking newBooking = getDefaultBooking()
+        var newBooking = getDefaultBooking()
                 .setBookingDates(new Booking.BookingDates()
                         .setCheckin(LocalDate.now())
                         .setCheckout(checkout));
 
-        BookingResponse response = given().
+        var response = given().
                 contentType(JSON).
                 body(newBooking).
         when().
