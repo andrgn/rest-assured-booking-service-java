@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("getBooking: негативные кейсы")
-class Tests_getBookingNegativeCases {
+class GetBookingNegativeTests {
 
     @ParameterizedTest
     @DisplayName("getBooking возвращает 404 если передали невалидный bookingId")

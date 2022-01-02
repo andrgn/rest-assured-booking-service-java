@@ -15,7 +15,7 @@ import static utils.Steps.getDefaultBooking;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("createBooking: негативные кейсы")
-class Tests_createBookingNegativeCases {
+class CreateBookingNegativeTests {
 
     @Test
     @DisplayName("createBooking возвращает 500 если передали null для firstname")

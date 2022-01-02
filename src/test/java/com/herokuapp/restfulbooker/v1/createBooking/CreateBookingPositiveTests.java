@@ -23,10 +23,10 @@ import static utils.Steps.getDefaultBooking;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("createBooking: позитивные кейсы")
-class Tests_createBookingPositiveCases {
+class CreateBookingPositiveTests {
 
     @Test
-    @DisplayName("Ответ createBooking соответсвует схеме")
+    @DisplayName("Ответ createBooking соответствует схеме")
     void createBookingResponseMatchesToSchema() {
         var newBooking = getDefaultBooking();
 
@@ -54,7 +54,7 @@ class Tests_createBookingPositiveCases {
     }
 
     @ParameterizedTest
-    @DisplayName("createBooking возращает верный firstname")
+    @DisplayName("createBooking возвращает верный firstname")
     @ValueSource(strings = { "Bill", "Дмитрий" })
     void createBookingReturnsCorrectFirstname(String firstname) {
         var newBooking = getDefaultBooking()
@@ -74,7 +74,7 @@ class Tests_createBookingPositiveCases {
     }
 
     @ParameterizedTest
-    @DisplayName("createBooking возращает верный lastname")
+    @DisplayName("createBooking возвращает верный lastname")
     @ValueSource(strings = { "Jackson", "Петров" })
     void createBookingReturnsCorrectLastname(String lastname) {
         var newBooking = getDefaultBooking()

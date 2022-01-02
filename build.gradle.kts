@@ -1,7 +1,8 @@
 plugins {
     java
-    id("io.freefair.lombok") version "5.3.0"
-    id("io.qameta.allure") version "2.5"
+
+    id("io.freefair.lombok") version "6.3.0"
+    id("io.qameta.allure") version "2.9.6"
 }
 
 group = "com.demo-rest-assured"
@@ -11,29 +12,40 @@ repositories {
     mavenCentral()
 }
 
-val junit5Version = "5.7.0"
-val restAssuredVersion = "4.3.3"
-val allureVersion = "2.13.8"
+val allureVersion = "2.17.2"
 
 dependencies {
+    // slf4j to avoid warning http://www.slf4j.org/codes.html#StaticLoggerBinder
+    val slf4jVersion = "1.7.32"
+    runtimeOnly("org.slf4j:slf4j-api:$slf4jVersion")
+    runtimeOnly("org.slf4j:slf4j-simple:$slf4jVersion")
+
+    // JUnit5
+    val junit5Version = "5.8.2"
     implementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
     implementation("org.junit.jupiter:junit-jupiter-params:$junit5Version")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
 
+    // Rest-Assured
+    val restAssuredVersion = "4.4.0"
     implementation("io.rest-assured:rest-assured:$restAssuredVersion")
     implementation("io.rest-assured:json-schema-validator:$restAssuredVersion")
 
-    testImplementation("io.qameta.allure:allure-rest-assured:$allureVersion")
-    testImplementation("io.qameta.allure:allure-junit5:$allureVersion")
+    // Allure
+    implementation("io.qameta.allure:allure-rest-assured:$allureVersion")
+    implementation("io.qameta.allure:allure-junit5:$allureVersion")
 
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.0")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.12.0")
+    // Jackson
+    val jacksonVersion = "2.13.1"
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+
+    // Other
     implementation("com.github.javafaker:javafaker:1.0.2")
 }
 
 allure {
-    autoconfigure = true
-    version = "2.8.1"
+    version.set(allureVersion)
 }
 
 tasks.test {
