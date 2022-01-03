@@ -7,13 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import error_messages.ResponseErrorMessage;
 import extensions.RestAssuredExtension;
-import entities.Booking;
-import entities.BookingResponse;
-
-import java.time.LocalDate;
 
 import static credentials.AdminCredentials.*;
-import static endpoints.RestfulBookerEndpoint.BOOKING;
 import static endpoints.RestfulBookerEndpoint.BOOKING_BY_ID;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
@@ -23,7 +18,7 @@ import static utils.Steps.postBooking;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("deleteBooking: негативные кейсы")
-class Tests_deleteBookingNegativeCases {
+class DeleteBookingNegativeTests {
 
     @ParameterizedTest
     @DisplayName("deleteBooking возвращает 405 если передали невалидный bookingId")

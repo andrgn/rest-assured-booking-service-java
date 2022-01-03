@@ -9,13 +9,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import extensions.RestAssuredExtension;
 import entities.Booking;
-import entities.BookingResponse;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import static credentials.AdminCredentials.*;
-import static endpoints.RestfulBookerEndpoint.BOOKING;
 import static endpoints.RestfulBookerEndpoint.BOOKING_BY_ID;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
@@ -27,10 +25,10 @@ import static utils.Steps.postBooking;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("updateBooking: позитивные кейсы")
-class Tests_updateBookingPositiveCases {
+class UpdateBookingPositiveTests {
 
     @Test
-    @DisplayName("updateBooking соотвествует схеме")
+    @DisplayName("updateBooking соответствует схеме")
     void updateBookingMatchesToSchema() {
         var newBooking = getDefaultBooking()
                 .setFirstname("Bill");
@@ -68,7 +66,7 @@ class Tests_updateBookingPositiveCases {
     }
 
     @ParameterizedTest
-    @DisplayName("updateBooking возращает обновленный firstname")
+    @DisplayName("updateBooking возвращает обновленный firstname")
     @ValueSource(strings = { "John", "Дмитрий" })
     void updateBookingReturnsUpdatedFirstname(String newFirstname) {
         var newBooking = getDefaultBooking()
@@ -199,7 +197,7 @@ class Tests_updateBookingPositiveCases {
     }
 
     @ParameterizedTest
-    @DisplayName("updateBooking возвращает обновленый bookingdates.checkin")
+    @DisplayName("updateBooking возвращает обновленный bookingdates.checkin")
     @MethodSource("checkinProvider")
     void updateBookingReturnsUpdatedBookingDatesCheckin(LocalDate newCheckin) {
         var newBooking = getDefaultBooking()

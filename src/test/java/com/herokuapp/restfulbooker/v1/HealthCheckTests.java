@@ -9,7 +9,7 @@ import static endpoints.RestfulBookerEndpoint.PING;
 import static io.restassured.RestAssured.*;
 
 @ExtendWith(RestAssuredExtension.class)
-class Test_HealthCheck {
+class HealthCheckTests {
 
     @Test
     @DisplayName("ping возвращает 201")

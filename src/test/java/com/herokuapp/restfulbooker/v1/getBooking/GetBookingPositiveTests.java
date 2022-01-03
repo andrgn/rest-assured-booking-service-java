@@ -8,16 +8,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import extensions.RestAssuredExtension;
 import entities.Booking;
-import entities.BookingResponse;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
-import static endpoints.RestfulBookerEndpoint.BOOKING;
 import static endpoints.RestfulBookerEndpoint.BOOKING_BY_ID;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
-import static io.restassured.http.ContentType.JSON;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -26,7 +23,7 @@ import static utils.Steps.postBooking;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("getBooking: позитивные кейсы")
-class Tests_getBookingPositiveCases {
+class GetBookingPositiveTests {
 
     @Test
     @DisplayName("getBooking соответствует схеме")
@@ -37,7 +34,7 @@ class Tests_getBookingPositiveCases {
         when().
                 get(BOOKING_BY_ID, createBookingResponse.getBookingId()).
         then().
-                body(matchesJsonSchemaInClasspath("schemas/getBookingSchema.json"));
+                body(matchesJsonSchemaInClasspath("schemas/GetBookingSchema.json"));
     }
 
     @Test
