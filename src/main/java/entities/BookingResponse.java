@@ -1,13 +1,14 @@
 package entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.Getter;
 
-@Data
-@Accessors(chain = true)
 public class BookingResponse {
     @JsonProperty("bookingid")
+    @Getter
     Integer bookingId;
+
+    @JsonProperty("booking")
+    @Getter
     Booking booking;
 }

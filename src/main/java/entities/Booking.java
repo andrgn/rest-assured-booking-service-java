@@ -1,35 +1,40 @@
 package entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.*;
 
-import java.time.LocalDate;
-
-@Data
-@Accessors(chain = true)
+@Builder(builderMethodName = "Builder", setterPrefix = "set")
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Booking {
+    @JsonProperty("firstname")
+    @Builder.Default
+    @Getter
+    private String firstname = "Bill";
 
-    String firstname;
-
-    String lastname;
+    @JsonProperty("lastname")
+    @Builder.Default
+    @Getter
+    private String lastname = "Jackson";
 
     @JsonProperty("totalprice")
-    Integer totalPrice;
+    @Builder.Default
+    @Getter
+    private Integer totalPrice = 1_000;
 
     @JsonProperty("depositpaid")
-    Boolean depositPaid;
+    @Builder.Default
+    @Getter
+    private Boolean depositPaid = true;
 
     @JsonProperty("additionalneeds")
-    String additionalNeeds;
+    @Builder.Default
+    @Getter
+    private String additionalNeeds = "Breakfast";
 
     @JsonProperty("bookingdates")
-    BookingDates bookingDates;
-
-    @Data
-    @Accessors(chain = true)
-    public static class BookingDates {
-        LocalDate checkin;
-        LocalDate checkout;
-    }
+    @Builder.Default
+    @Getter
+    private BookingDates bookingDates = BookingDates.Builder().build();
 }
