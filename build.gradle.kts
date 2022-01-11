@@ -37,7 +37,6 @@ dependencies {
 
     // Other
     implementation("io.rest-assured:rest-assured:4.4.0")
-    implementation("com.github.javafaker:javafaker:1.0.2")
     testImplementation("org.assertj:assertj-core:3.22.0")
 }
 

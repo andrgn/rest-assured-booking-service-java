@@ -137,7 +137,7 @@ class DeleteBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("deleteBooking возвращает сообщение об ошибке если пользователь не авторизован")
+    @DisplayName("deleteBooking возвращает верное сообщение об ошибке если пользователь не авторизован")
     void deleteBookingReturnsErrorMessageIfUserIsNotAuthorized() {
         var booking = Booking.Builder().build();
         var createBookingResponse = step("Создание нового бронирования", () -> createBookingStep(booking));

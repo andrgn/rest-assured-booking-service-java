@@ -25,7 +25,7 @@ class CreateBookingNegativeTests {
                 .setFirstname(null)
                 .build();
 
-        var actualStatusCode = step("Создание бронирования с firstname=null", () ->
+        var actualStatusCode = step("Создание бронирования с firstname = null", () ->
                 given().
                         contentType(JSON).
                         body(booking).
@@ -47,7 +47,7 @@ class CreateBookingNegativeTests {
                 .setLastname(null)
                 .build();
 
-        var actualStatusCode = step("Создание бронирования с lastname=500", () ->
+        var actualStatusCode = step("Создание бронирования с lastname = 500", () ->
                 given().
                         contentType(JSON).
                         body(booking).
@@ -69,7 +69,7 @@ class CreateBookingNegativeTests {
                 .setDepositPaid(null)
                 .build();
 
-        var actualStatusCode = step("Создание бронирования с depositPaid=null", () ->
+        var actualStatusCode = step("Создание бронирования с depositPaid = null", () ->
                 given().
                         contentType(JSON).
                         body(booking).
@@ -91,7 +91,7 @@ class CreateBookingNegativeTests {
                 .setBookingDates(null)
                 .build();
 
-        var actualStatusCode = step("Создание бронирования с bookingDates=null", () ->
+        var actualStatusCode = step("Создание бронирования с bookingDates = null", () ->
                 given().
                         contentType(JSON).
                         body(booking).
@@ -111,7 +111,7 @@ class CreateBookingNegativeTests {
     void createBookingReturns500IfBookingDatesCheckinIsNull() {
         var booking = createBookingDataWithCheckinStep(null);
 
-        var actualStatusCode = step("Создание бронирования с bookingdates.checkin=null", () ->
+        var actualStatusCode = step("Создание бронирования с bookingdates.checkin = null", () ->
                 given().
                         contentType(JSON).
                         body(booking).
@@ -131,7 +131,7 @@ class CreateBookingNegativeTests {
     void createBookingReturns500IfBookingDatesCheckoutIsNull() {
         var booking = createBookingDataWithCheckoutStep(null);
 
-        var actualStatusCode = step("Создание бронирования с bookingdates.checkout=null", ()->
+        var actualStatusCode = step("Создание бронирования с bookingdates.checkout = null", ()->
                 given().
                         contentType(JSON).
                         body(booking).

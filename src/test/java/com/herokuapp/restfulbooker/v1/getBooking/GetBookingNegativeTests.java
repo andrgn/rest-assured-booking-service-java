@@ -39,7 +39,7 @@ class GetBookingNegativeTests {
     }
 
     @ParameterizedTest
-    @DisplayName("getBooking возвращает сообщение об ошибке если передали невалидный bookingId")
+    @DisplayName("getBooking возвращает верное сообщение об ошибке если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void getBookingReturnsErrorMessageIfBookingIdIsInvalid(Integer invalidBookingId) {
         parameter("невалидный bookingId", invalidBookingId);
@@ -78,7 +78,7 @@ class GetBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("getBooking возвращает сообщение об ошибке если передали несуществующий bookingId")
+    @DisplayName("getBooking возвращает верное сообщение об ошибке если передали несуществующий bookingId")
     void getBookingReturnsErrorMessageIfBookingIdsIsNonexistent() {
         var nonExistentId = Integer.MAX_VALUE;
 

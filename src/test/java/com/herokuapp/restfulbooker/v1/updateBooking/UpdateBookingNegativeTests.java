@@ -49,7 +49,7 @@ class UpdateBookingNegativeTests {
     }
 
     @ParameterizedTest
-    @DisplayName("updateBooking возвращает сообщение об ошибке если передали невалидный bookingId")
+    @DisplayName("updateBooking возвращает верное сообщение об ошибке если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void updateBookingReturnsErrorMessageIfBookingIdIsInvalid(Integer invalidBookingId) {
         parameter("невалидный bookingId", invalidBookingId);
@@ -98,7 +98,7 @@ class UpdateBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("updateBooking возвращает сообщение об ошибке если передали несуществующий bookingId")
+    @DisplayName("updateBooking возвращает верное сообщение об ошибке если передали несуществующий bookingId")
     void updatedBookingReturnsErrorMessageIfBookingIdIsNonexistent() {
         var nonExistentId = Integer.MAX_VALUE;
         var updatedBooking = Booking.Builder().build();
@@ -154,7 +154,7 @@ class UpdateBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("updateBooking возвращает сообщение об ошибке если пользователь не авторизован")
+    @DisplayName("updateBooking возвращает верное сообщение об ошибке если пользователь не авторизован")
     void updateBookingReturnsErrorMessageIfUserNonAuthorized() {
         var booking = Booking.Builder()
                 .setFirstname("Bill")
