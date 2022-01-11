@@ -5,52 +5,94 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import error_messages.ResponseErrorMessage;
 import extensions.RestAssuredExtension;
 
 import static endpoints.RestfulBookerEndpoint.BOOKING_BY_ID;
+import static error_messages.ResponseErrorMessage.NOT_FOUND;
+import static io.qameta.allure.Allure.parameter;
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.when;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("getBooking: негативные кейсы")
 class GetBookingNegativeTests {
 
     @ParameterizedTest
-    @DisplayName("getBooking возвращает 404 если передали невалидный bookingId")
+    @DisplayName("getBooking возвращает statusCode 404 если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void getBookingReturns404IfBookingIdIsInvalid(Integer invalidBookingId) {
-        when().
-                get(BOOKING_BY_ID, invalidBookingId).
-        then().
-                statusCode(404);
+        parameter("невалидный bookingId", invalidBookingId);
+
+        var actualStatusCode = step(
+                String.format("Получение бронирования по невалидному bookingId = %d", invalidBookingId),
+                () ->
+                        when().
+                                get(BOOKING_BY_ID, invalidBookingId).
+                        then().
+                                extract().statusCode()
+        );
+
+        step("statusCode ответа эквивалентен 404", () ->
+                assertThat(actualStatusCode).as("getBooking вернул неверный statusCode").isEqualTo(404)
+        );
     }
 
     @ParameterizedTest
-    @DisplayName("getBooking возвращает сообщение об ошибке если передали невалидный bookingId")
+    @DisplayName("getBooking возвращает верное сообщение об ошибке если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void getBookingReturnsErrorMessageIfBookingIdIsInvalid(Integer invalidBookingId) {
-        when().
-                get(BOOKING_BY_ID, invalidBookingId).
-        then().
-                body(equalTo(ResponseErrorMessage.NOT_FOUND));
+        parameter("невалидный bookingId", invalidBookingId);
+
+        var actualErrorMessage = step(
+                String.format("Получение бронирования по невалидному bookingId = %d", invalidBookingId),
+                () ->
+                        when().
+                                get(BOOKING_BY_ID, invalidBookingId).
+                        then().
+                                extract().htmlPath().getString("html.body")
+        );
+
+        step(String.format("В ответе сообщение об ошибке = '%s'", NOT_FOUND), () ->
+                assertThat(actualErrorMessage).as("getBooking вернул неверное сообщение об ошибке").isEqualTo(NOT_FOUND)
+        );
     }
 
     @Test
-    @DisplayName("getBooking возвращает 404 если передали несуществующий bookingId")
+    @DisplayName("getBooking возвращает statusCode 404 если передали несуществующий bookingId")
     void getBookingReturns404IfBookingIdsIsNonexistent() {
-        when().
-                get(BOOKING_BY_ID, Integer.MAX_VALUE).
-        then().
-                statusCode(404);
+        var nonExistentId = Integer.MAX_VALUE;
+
+        var actualStatusCode = step(
+                String.format("Получение бронирования по несуществующему bookingId = %d", nonExistentId),
+                () ->
+                        when().
+                                get(BOOKING_BY_ID, nonExistentId).
+                        then().
+                                extract().statusCode()
+        );
+
+        step("statusCode ответа эквивалентен 404", () ->
+                assertThat(actualStatusCode).as("getBooking вернул неверный statusCode").isEqualTo(404)
+        );
     }
 
     @Test
-    @DisplayName("getBooking возвращает сообщение об ошибке если передали несуществующий bookingId")
+    @DisplayName("getBooking возвращает верное сообщение об ошибке если передали несуществующий bookingId")
     void getBookingReturnsErrorMessageIfBookingIdsIsNonexistent() {
-        when().
-                get(BOOKING_BY_ID, Integer.MAX_VALUE).
-        then().
-                body(equalTo(ResponseErrorMessage.NOT_FOUND));
+        var nonExistentId = Integer.MAX_VALUE;
+
+        var actualErrorMessage = step(
+                String.format("Получение бронирования по несуществующему bookingId = %d", nonExistentId),
+                () ->
+                        when().
+                                get(BOOKING_BY_ID, nonExistentId).
+                        then().
+                                extract().htmlPath().getString("html.body")
+        );
+
+        step(String.format("В ответе сообщение об ошибке = '%s'", NOT_FOUND), () ->
+                assertThat(actualErrorMessage).as("getBooking вернул неверное сообщение об ошибке").isEqualTo(NOT_FOUND)
+        );
     }
 }

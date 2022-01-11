@@ -5,6 +5,3 @@
 # API doc
 
 https://restful-booker.herokuapp.com/apidoc/index.html
-
-# Recommendations
-- Java 14

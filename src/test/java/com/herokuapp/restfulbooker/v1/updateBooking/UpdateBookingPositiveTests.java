@@ -4,9 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import extensions.RestAssuredExtension;
 import entities.Booking;
 
@@ -15,151 +15,214 @@ import java.util.stream.Stream;
 
 import static credentials.AdminCredentials.*;
 import static endpoints.RestfulBookerEndpoint.BOOKING_BY_ID;
+import static io.qameta.allure.Allure.*;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static utils.Steps.getDefaultBooking;
-import static utils.Steps.postBooking;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static utils.Steps.*;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("updateBooking: позитивные кейсы")
 class UpdateBookingPositiveTests {
 
     @Test
-    @DisplayName("updateBooking соответствует схеме")
-    void updateBookingMatchesToSchema() {
-        var newBooking = getDefaultBooking()
-                .setFirstname("Bill");
-        var createBookingResponse = postBooking(newBooking);
-        var updatedBooking = newBooking
-                .setFirstname("John");
-
-        given().
-                contentType(JSON).
-                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
-                body(updatedBooking).
-        when().
-                put(BOOKING_BY_ID, createBookingResponse.getBookingId()).
-        then().
-                body(matchesJsonSchemaInClasspath("schemas/UpdateBookingSchema.json"));
-    }
-
-    @Test
-    @DisplayName("updateBooking возвращает 200")
+    @DisplayName("updateBooking возвращает statusCode 200")
     void updateBookingReturns200() {
-        var newBooking = getDefaultBooking()
-                .setFirstname("Bill");
-        var createBookingResponse = postBooking(newBooking);
-        var updatedBooking = newBooking
-                .setFirstname("John");
+        var booking = Booking.Builder()
+                .setFirstname("Bill")
+                .build();
+        var createBookingResponse = step(
+                "Создание нового бронирования с firstname = 'Bill'",
+                () -> createBookingStep(booking)
+        );
+        var bookingId = createBookingResponse.getBookingId();
+        var updatedBooking = Booking.Builder()
+                .setFirstname("John")
+                .build();
 
-        given().
-                contentType(JSON).
-                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
-                body(updatedBooking).
-        when().
-                put(BOOKING_BY_ID, createBookingResponse.getBookingId()).
-        then().
-                statusCode(200);
+        var actualStatusCode = step("Обновление созданного бронирования с новым firstname = 'John'", () ->
+                given().
+                        contentType(JSON).
+                        auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                        body(updatedBooking).
+                when().
+                        put(BOOKING_BY_ID, bookingId).
+                then().
+                        extract().statusCode()
+        );
+
+        step("statusCode ответа эквивалентен 200", () ->
+                assertThat(actualStatusCode).as("updateBooking вернул неверный statusCode").isEqualTo(200)
+        );
     }
 
     @ParameterizedTest
     @DisplayName("updateBooking возвращает обновленный firstname")
-    @ValueSource(strings = { "John", "Дмитрий" })
-    void updateBookingReturnsUpdatedFirstname(String newFirstname) {
-        var newBooking = getDefaultBooking()
-                .setFirstname("Bill");
-        var createBookingResponse = postBooking(newBooking);
-        var updatedBooking = newBooking
-                .setFirstname(newFirstname);
+    @CsvSource({
+            "Bill, John",
+            "Bill, Дмитрий"
+    })
+    void updateBookingReturnsUpdatedFirstname(String oldFirstname, String expectedFirstname) {
+        parameter("старый firstname", oldFirstname);
+        parameter("новый firstname", expectedFirstname);
 
-        var response = given().
-                contentType(JSON).
-                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
-                body(updatedBooking).
-        when().
-                put(BOOKING_BY_ID, createBookingResponse.getBookingId()).
-        then().
-                extract().as(Booking.class);
+        var booking = Booking.Builder()
+                .setFirstname(oldFirstname)
+                .build();
+        var createBookingResponse = step(
+                String.format("Создание нового бронирования с firstname = '%s'", oldFirstname),
+                () -> createBookingStep(booking)
+        );
+        var bookingId = createBookingResponse.getBookingId();
+        var updatedBooking = Booking.Builder()
+                .setFirstname(expectedFirstname)
+                .build();
 
-        assertThat("updateBooking вернул неверный firstname",
-                response.getFirstname(), equalTo(newFirstname));
+        var updateBookingResponse = step(
+                String.format("Обновление созданного бронирования с новым firstname = '%s'", expectedFirstname),
+                () ->
+                        given().
+                                contentType(JSON).
+                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                body(updatedBooking).
+                        when().
+                                put(BOOKING_BY_ID, bookingId).
+                        then().
+                                extract().as(Booking.class)
+        );
+        var actualFirstname = updateBookingResponse.getFirstname();
+
+        step(String.format("В ответе firstname = '%s'", expectedFirstname), () ->
+                assertThat(actualFirstname).as("updateBooking вернул неверный firstname").isEqualTo(expectedFirstname)
+        );
     }
 
     @ParameterizedTest
     @DisplayName("updateBooking возвращает обновленный lastname")
-    @ValueSource(strings = { "Smith", "Иванов" })
-    void updateBookingReturnsUpdatedLastname(String newLastname) {
-        var newBooking = getDefaultBooking()
-                .setLastname("Jackson");
-        var createBookingResponse = postBooking(newBooking);
-        var updatedBooking = newBooking
-                .setLastname(newLastname);
+    @CsvSource({
+            "Jackson, Smith",
+            "Jackson, Иванов"
+    })
+    void updateBookingReturnsUpdatedLastname(String oldLastname, String expectedLastname) {
+        parameter("старый lastname", oldLastname);
+        parameter("новый lastname", expectedLastname);
 
-        var response = given().
-                contentType(JSON).
-                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
-                body(updatedBooking).
-        when().
-                put(BOOKING_BY_ID, createBookingResponse.getBookingId()).
-        then().
-                extract().as(Booking.class);
+        var booking = Booking.Builder()
+                .setLastname(oldLastname)
+                .build();
+        var createBookingResponse = step(
+                String.format("Создание нового бронирования с lastname = '%s'", oldLastname),
+                () -> createBookingStep(booking)
+        );
+        var bookingId = createBookingResponse.getBookingId();
+        var updatedBooking = Booking.Builder()
+                .setLastname(expectedLastname)
+                .build();
 
-        assertThat("updateBooking вернул неверный lastname",
-                response.getLastname(), equalTo(newLastname));
+        var updateBookingResponse = step(
+                String.format("Обновление созданного бронирования с новым lastname = '%s'", expectedLastname),
+                () ->
+                        given().
+                                contentType(JSON).
+                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                body(updatedBooking).
+                        when().
+                                put(BOOKING_BY_ID, bookingId).
+                        then().
+                                extract().as(Booking.class)
+        );
+        var actualLastname = updateBookingResponse.getLastname();
+
+        step(String.format("В ответе lastname = '%s'", expectedLastname), () ->
+                assertThat(actualLastname).as("updateBooking вернул неверный lastname").isEqualTo(expectedLastname)
+        );
     }
 
     @ParameterizedTest
     @DisplayName("updateBooking возвращает обновленный additionalneeds")
-    @ValueSource(strings = {
-            "Breakfast",
-            "Breakfast, brunch, lunch, dinner, tea, supper",
-            "Завтрак",
-            "Завтрак, обед, ужин"
+    @CsvSource({
+            "'Old additional needs', Breakfast",
+            "'Old additional needs', Завтрак",
+            "'Old additional needs', 'Breakfast, lunch, dinner'",
+            "'Old additional needs', 'Завтрак, обед, ужин'"
     })
-    void updateBookingReturnsUpdatedAdditionalNeeds(String newAdditionalNeeds) {
-        var newBooking = getDefaultBooking()
-                .setAdditionalNeeds("Old additional needs");
-        var createBookingResponse = postBooking(newBooking);
-        var updatedBooking = newBooking
-                .setAdditionalNeeds(newAdditionalNeeds);
+    void updateBookingReturnsUpdatedAdditionalNeeds(String oldAdditionalNeeds, String expectedAdditionalNeeds) {
+        parameter("старый additionalneeds", oldAdditionalNeeds);
+        parameter("новый additionalneeds", expectedAdditionalNeeds);
 
-        var response = given().
-                contentType(JSON).
-                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
-                body(updatedBooking).
-        when().
-                put(BOOKING_BY_ID, createBookingResponse.getBookingId()).
-        then().
-                extract().as(Booking.class);
+        var booking = Booking.Builder()
+                .setAdditionalNeeds(oldAdditionalNeeds)
+                .build();
+        var createBookingResponse = step(
+                String.format("Создание нового бронирования с additionalneeds = '%s'", oldAdditionalNeeds),
+                () -> createBookingStep(booking)
+        );
+        var bookingId = createBookingResponse.getBookingId();
+        var updatedBooking = Booking.Builder()
+                .setAdditionalNeeds(expectedAdditionalNeeds)
+                .build();
 
-        assertThat("updateBooking вернул неверный additionalneeds",
-                response.getAdditionalNeeds(), equalTo(newAdditionalNeeds));
+        var updateBookingResponse = step(
+                String.format("Обновление созданного бронирования с новым additionalneeds = '%s'", expectedAdditionalNeeds),
+                () ->
+                        given().
+                                contentType(JSON).
+                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                body(updatedBooking).
+                        when().
+                                put(BOOKING_BY_ID, bookingId).
+                        then().
+                                extract().as(Booking.class)
+        );
+        var actualAdditionalNeeds = updateBookingResponse.getAdditionalNeeds();
+
+        step(String.format("В ответе additionalneeds = '%s'", expectedAdditionalNeeds), () ->
+                assertThat(actualAdditionalNeeds).as("updateBooking вернул неверный additionalneeds").isEqualTo(expectedAdditionalNeeds)
+        );
     }
 
     @ParameterizedTest
     @DisplayName("updateBooking возвращает обновленный totalprice")
-    @ValueSource(ints = { 0, 5, 100, 5_000_000 })
-    void updateBookingReturnsUpdatedTotalPrice(Integer newTotalPrice) {
-        var newBooking = getDefaultBooking()
-                .setTotalPrice(123);
-        var createBookingResponse = postBooking(newBooking);
-        var updatedBooking = newBooking
-                .setTotalPrice(newTotalPrice);
+    @CsvSource({
+        "1_000, 0",
+        "1_000, 5",
+        "1_000, 100",
+        "1_000, 5_000_000"
+    })
+    void updateBookingReturnsUpdatedTotalPrice(Integer oldTotalPrice, Integer expectedTotalPrice) {
+        parameter("старый totalprice", oldTotalPrice);
+        parameter("новый totalprice", expectedTotalPrice);
 
-        var response = given().
-                contentType(JSON).
-                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
-                body(updatedBooking).
-        when().
-                put(BOOKING_BY_ID, createBookingResponse.getBookingId()).
-        then().
-                extract().as(Booking.class);
+        var booking = Booking.Builder()
+                .setTotalPrice(oldTotalPrice)
+                .build();
+        var createBookingResponse = step(
+                String.format("Создание нового бронирования с totalprice = %d", oldTotalPrice),
+                () -> createBookingStep(booking)
+        );
+        var bookingId = createBookingResponse.getBookingId();
+        var updatedBooking = Booking.Builder()
+                .setTotalPrice(expectedTotalPrice)
+                .build();
 
-        assertThat("updateBooking вернул неверный totalprice",
-                response.getTotalPrice(), equalTo(newTotalPrice));
+        var updateBookingResponse = step(
+                String.format("Обновление созданного бронирования с новым totalprice = %d", expectedTotalPrice),
+                () ->
+                        given().
+                                contentType(JSON).
+                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                body(updatedBooking).
+                        when().
+                                put(BOOKING_BY_ID, bookingId).
+                        then().
+                                extract().as(Booking.class)
+        );
+        var actualTotalPrice = updateBookingResponse.getTotalPrice();
+
+        step(String.format("В ответе totalprice = %s", expectedTotalPrice), () ->
+                assertThat(actualTotalPrice).as("updateBooking вернул неверный totalprice").isEqualTo(expectedTotalPrice)
+        );
     }
 
     @ParameterizedTest
@@ -168,91 +231,124 @@ class UpdateBookingPositiveTests {
             "true, false",
             "false, true"
     })
-    void updateBookingReturnsUpdatedDepositPaid(Boolean oldDepositPaid, Boolean newDepositPaid) {
-        var newBooking = getDefaultBooking()
-                .setDepositPaid(oldDepositPaid);
-        var createBookingResponse = postBooking(newBooking);
-        var updatedBooking = newBooking
-                .setDepositPaid(newDepositPaid);
+    void updateBookingReturnsUpdatedDepositPaid(Boolean oldDepositPaid, Boolean expectedDepositPaid) {
+        parameter("старый depositpaid", oldDepositPaid);
+        parameter("новый depositpaid", expectedDepositPaid);
 
-        var response = given().
-                contentType(JSON).
-                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
-                body(updatedBooking).
-        when().
-                put(BOOKING_BY_ID, createBookingResponse.getBookingId()).
-        then().
-                extract().as(Booking.class);
+        var booking = Booking.Builder()
+                .setDepositPaid(oldDepositPaid)
+                .build();
+        var createBookingResponse = step(
+                String.format("Создание нового бронирования с depositpaid = %s", oldDepositPaid),
+                () -> createBookingStep(booking)
+        );
+        var bookingId = createBookingResponse.getBookingId();
+        var updatedBooking = Booking.Builder()
+                .setDepositPaid(expectedDepositPaid)
+                .build();
 
-        assertThat("updatedBooking вернул неверный depositpaid",
-                response.getDepositPaid(), equalTo(newDepositPaid));
-    }
+        var updateBookingResponse = step(
+                String.format("Обновление созданного бронирования с новым depositpaid = %s", expectedDepositPaid),
+                () ->
+                        given().
+                                contentType(JSON).
+                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                body(updatedBooking).
+                        when().
+                                put(BOOKING_BY_ID, bookingId).
+                        then().
+                                extract().as(Booking.class)
+        );
+        var actualDepositPaid = updateBookingResponse.getDepositPaid();
 
-    static Stream<LocalDate> checkinProvider() {
-        return Stream.of(
-                LocalDate.parse("2021-01-05"),
-                LocalDate.parse("2021-05-01"),
-                LocalDate.parse("2022-01-01")
+        step(String.format("В ответе depositpaid = %s", expectedDepositPaid), () ->
+                assertThat(actualDepositPaid).as("updatedBooking вернул неверный depositpaid").isEqualTo(expectedDepositPaid)
         );
     }
 
     @ParameterizedTest
     @DisplayName("updateBooking возвращает обновленный bookingdates.checkin")
     @MethodSource("checkinProvider")
-    void updateBookingReturnsUpdatedBookingDatesCheckin(LocalDate newCheckin) {
-        var newBooking = getDefaultBooking()
-                .setBookingDates(new Booking.BookingDates()
-                        .setCheckin(LocalDate.parse("2021-01-01"))
-                        .setCheckout(LocalDate.now()));
-        var createBookingResponse = postBooking(newBooking);
-        var updatedBooking = newBooking
-                .setBookingDates(newBooking.getBookingDates()
-                        .setCheckin(newCheckin));
+    void updateBookingReturnsUpdatedBookingDatesCheckin(LocalDate oldCheckin, LocalDate expectedCheckin) {
+        parameter("старый checkin", oldCheckin);
+        parameter("новый checkin", expectedCheckin);
 
-        var response = given().
-                contentType(JSON).
-                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
-                body(updatedBooking).
-        when().
-                put(BOOKING_BY_ID, createBookingResponse.getBookingId()).
-        then().
-                extract().as(Booking.class);
+        var booking = createBookingDataWithCheckinStep(oldCheckin);
+        var createBookingResponse = step(
+                String.format("Создание нового бронирования с booking.checkin = '%s'", oldCheckin),
+                () -> createBookingStep(booking)
+        );
+        var bookingId = createBookingResponse.getBookingId();
+        var updatedBooking = createBookingDataWithCheckinStep(expectedCheckin);
 
-        assertThat("updateBooking вернул неверный bookingdates.checkin",
-                response.getBookingDates().getCheckin(), equalTo(newCheckin));
+        var updateBookingResponse = step(
+                String.format("Обновление созданного бронирования с новым bookingdates.checkin = '%s'", expectedCheckin),
+                () ->
+                        given().
+                                contentType(JSON).
+                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                body(updatedBooking).
+                        when().
+                                put(BOOKING_BY_ID, bookingId).
+                        then().
+                                extract().as(Booking.class)
+        );
+        var actualCheckin = updateBookingResponse.getBookingDates().getCheckin();
+
+        step(String.format("В ответе bookingdates.checkin = '%s'", expectedCheckin), () ->
+                assertThat(actualCheckin).as("updateBooking вернул неверный bookingdates.checkin").isEqualTo(expectedCheckin)
+        );
     }
 
-    static Stream<LocalDate> checkoutProvider() {
+    static Stream<Arguments> checkinProvider() {
         return Stream.of(
-                LocalDate.parse("2021-01-05"),
-                LocalDate.parse("2021-05-01"),
-                LocalDate.parse("2022-01-01")
+                arguments(LocalDate.now(), LocalDate.now().plusDays(1)),
+                arguments(LocalDate.now(), LocalDate.now().plusWeeks(1)),
+                arguments(LocalDate.now(), LocalDate.now().plusMonths(1)),
+                arguments(LocalDate.now(), LocalDate.now().plusYears(1))
         );
     }
 
     @ParameterizedTest
     @DisplayName("updateBooking возвращает обновленный bookingdates.checkout")
     @MethodSource("checkoutProvider")
-    void updateBookingReturnsUpdatedBookingDatesCheckout(LocalDate newCheckout) {
-        var newBooking = getDefaultBooking()
-                .setBookingDates(new Booking.BookingDates()
-                        .setCheckin(LocalDate.now())
-                        .setCheckout(LocalDate.parse("2021-01-01")));
-        var createBookingResponse = postBooking(newBooking);
-        var updatedBooking = newBooking
-                .setBookingDates(newBooking.getBookingDates()
-                        .setCheckout(newCheckout));
+    void updateBookingReturnsUpdatedBookingDatesCheckout(LocalDate oldCheckout, LocalDate expectedCheckout) {
+        parameter("старый checkout", oldCheckout);
+        parameter("новый checkout", expectedCheckout);
 
-        var response = given().
-                contentType(JSON).
-                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
-                body(updatedBooking).
-        when().
-                put(BOOKING_BY_ID, createBookingResponse.getBookingId()).
-        then().
-                extract().as(Booking.class);
+        var booking = createBookingDataWithCheckoutStep(oldCheckout);
+        var createBookingResponse = step(
+                String.format("Создание нового бронирования с bookingdates.checkout = '%s'", oldCheckout),
+                () -> createBookingStep(booking)
+        );
+        var bookingId = createBookingResponse.getBookingId();
+        var updatedBooking = createBookingDataWithCheckoutStep(expectedCheckout);
 
-        assertThat("updatedBooking вернул неверный bookingdates.checkout",
-                response.getBookingDates().getCheckout(), equalTo(newCheckout));
+        var updateBookingResponse = step(
+                String.format("Обновление созданного бронирования с новым bookingdates.checkout = '%s'", expectedCheckout),
+                () ->
+                        given().
+                                contentType(JSON).
+                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                body(updatedBooking).
+                        when().
+                                put(BOOKING_BY_ID, bookingId).
+                        then().
+                                extract().as(Booking.class)
+        );
+        var actualCheckout = updateBookingResponse.getBookingDates().getCheckout();
+
+        step(String.format("В ответе bookingdates.checkout = '%s'", expectedCheckout), () ->
+                assertThat(actualCheckout).as("updatedBooking вернул неверный bookingdates.checkout").isEqualTo(expectedCheckout)
+        );
+    }
+
+    static Stream<Arguments> checkoutProvider() {
+        return Stream.of(
+                arguments(LocalDate.now(), LocalDate.now().plusDays(1)),
+                arguments(LocalDate.now(), LocalDate.now().plusWeeks(1)),
+                arguments(LocalDate.now(), LocalDate.now().plusMonths(1)),
+                arguments(LocalDate.now(), LocalDate.now().plusYears(1))
+        );
     }
 }

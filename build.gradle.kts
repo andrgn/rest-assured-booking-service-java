@@ -26,11 +26,6 @@ dependencies {
     implementation("org.junit.jupiter:junit-jupiter-params:$junit5Version")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
 
-    // Rest-Assured
-    val restAssuredVersion = "4.4.0"
-    implementation("io.rest-assured:rest-assured:$restAssuredVersion")
-    implementation("io.rest-assured:json-schema-validator:$restAssuredVersion")
-
     // Allure
     implementation("io.qameta.allure:allure-rest-assured:$allureVersion")
     implementation("io.qameta.allure:allure-junit5:$allureVersion")
@@ -41,7 +36,8 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
 
     // Other
-    implementation("com.github.javafaker:javafaker:1.0.2")
+    implementation("io.rest-assured:rest-assured:4.4.0")
+    testImplementation("org.assertj:assertj-core:3.22.0")
 }
 
 allure {
