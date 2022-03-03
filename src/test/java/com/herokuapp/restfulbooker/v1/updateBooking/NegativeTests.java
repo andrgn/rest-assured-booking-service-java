@@ -8,7 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import extensions.RestAssuredExtension;
 
-import static credentials.AdminCredentials.*;
+import static credentials.RestfulBookerCredentials.ADMIN;
 import static endpoints.RestfulBookerEndpoint.BOOKING_BY_ID;
 import static error_messages.ResponseErrorMessage.FORBIDDEN;
 import static error_messages.ResponseErrorMessage.METHOD_NOT_ALLOWED;
@@ -17,14 +17,15 @@ import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
+import static specifications.RequestSpecifications.CONTENT_TYPE_AND_AUTH_SPEC;
 import static utils.Steps.*;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("updateBooking: негативные кейсы")
-class UpdateBookingNegativeTests {
+class NegativeTests {
 
     @ParameterizedTest
-    @DisplayName("updateBooking возвращает statusCode 405 если передали невалидный bookingId")
+    @DisplayName("updateBooking возвращает верный statusCode, если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void updateBookingReturns405IfBookingIdIsInvalid(Integer invalidBookingId) {
         parameter("невалидный bookingId", invalidBookingId);
@@ -34,8 +35,7 @@ class UpdateBookingNegativeTests {
                 String.format("Обновление бронирования по невалидному bookingId = %d", invalidBookingId),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                                 body(updatedBooking).
                         when().
                                 put(BOOKING_BY_ID, invalidBookingId).
@@ -49,7 +49,7 @@ class UpdateBookingNegativeTests {
     }
 
     @ParameterizedTest
-    @DisplayName("updateBooking возвращает верное сообщение об ошибке если передали невалидный bookingId")
+    @DisplayName("updateBooking возвращает верное сообщение об ошибке, если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void updateBookingReturnsErrorMessageIfBookingIdIsInvalid(Integer invalidBookingId) {
         parameter("невалидный bookingId", invalidBookingId);
@@ -59,8 +59,7 @@ class UpdateBookingNegativeTests {
                 String.format("Обновление бронирования по невалидному bookingId = %d", invalidBookingId),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                                 body(updatedBooking).
                         when().
                                 put(BOOKING_BY_ID, invalidBookingId).
@@ -74,7 +73,7 @@ class UpdateBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("updateBooking возвращает statusCode 405 если передали несуществующий bookingId")
+    @DisplayName("updateBooking возвращает верный statusCode, если передали несуществующий bookingId")
     void updateBookingReturns405IfBookingIsNonexistent() {
         var nonExistentId = Integer.MAX_VALUE;
         var updateBooking = Booking.Builder().build();
@@ -83,8 +82,7 @@ class UpdateBookingNegativeTests {
                 String.format("Обновление бронирования по несуществующему bookingId = %d", nonExistentId),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                                 body(updateBooking).
                         when().
                                 put(BOOKING_BY_ID, nonExistentId).
@@ -98,7 +96,7 @@ class UpdateBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("updateBooking возвращает верное сообщение об ошибке если передали несуществующий bookingId")
+    @DisplayName("updateBooking возвращает верное сообщение об ошибке, если передали несуществующий bookingId")
     void updatedBookingReturnsErrorMessageIfBookingIdIsNonexistent() {
         var nonExistentId = Integer.MAX_VALUE;
         var updatedBooking = Booking.Builder().build();
@@ -107,8 +105,7 @@ class UpdateBookingNegativeTests {
                 String.format("Обновление бронирования по несуществующему bookingId = %d", nonExistentId),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                                 body(updatedBooking).
                         when().
                                 put(BOOKING_BY_ID, nonExistentId).
@@ -122,7 +119,7 @@ class UpdateBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("updateBooking возвращает statusCode 403 если пользователь не авторизован")
+    @DisplayName("updateBooking возвращает верный statusCode, если пользователь не авторизован")
     void updateBookingReturn403IfUserIsNotAuthorized() {
         var booking = Booking.Builder()
                 .setFirstname("Bill")
@@ -154,7 +151,7 @@ class UpdateBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("updateBooking возвращает верное сообщение об ошибке если пользователь не авторизован")
+    @DisplayName("updateBooking возвращает верное сообщение об ошибке, если пользователь не авторизован")
     void updateBookingReturnsErrorMessageIfUserNonAuthorized() {
         var booking = Booking.Builder()
                 .setFirstname("Bill")

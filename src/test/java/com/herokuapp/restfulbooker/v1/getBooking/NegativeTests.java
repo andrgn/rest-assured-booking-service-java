@@ -16,10 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("getBooking: негативные кейсы")
-class GetBookingNegativeTests {
+class NegativeTests {
 
     @ParameterizedTest
-    @DisplayName("getBooking возвращает statusCode 404 если передали невалидный bookingId")
+    @DisplayName("getBooking возвращает верный statusCode, если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void getBookingReturns404IfBookingIdIsInvalid(Integer invalidBookingId) {
         parameter("невалидный bookingId", invalidBookingId);
@@ -39,7 +39,7 @@ class GetBookingNegativeTests {
     }
 
     @ParameterizedTest
-    @DisplayName("getBooking возвращает верное сообщение об ошибке если передали невалидный bookingId")
+    @DisplayName("getBooking возвращает верное сообщение об ошибке, если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void getBookingReturnsErrorMessageIfBookingIdIsInvalid(Integer invalidBookingId) {
         parameter("невалидный bookingId", invalidBookingId);
@@ -59,7 +59,7 @@ class GetBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("getBooking возвращает statusCode 404 если передали несуществующий bookingId")
+    @DisplayName("getBooking возвращает верный statusCode, если передали несуществующий bookingId")
     void getBookingReturns404IfBookingIdsIsNonexistent() {
         var nonExistentId = Integer.MAX_VALUE;
 
@@ -78,7 +78,7 @@ class GetBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("getBooking возвращает верное сообщение об ошибке если передали несуществующий bookingId")
+    @DisplayName("getBooking возвращает верное сообщение об ошибке, если передали несуществующий bookingId")
     void getBookingReturnsErrorMessageIfBookingIdsIsNonexistent() {
         var nonExistentId = Integer.MAX_VALUE;
 

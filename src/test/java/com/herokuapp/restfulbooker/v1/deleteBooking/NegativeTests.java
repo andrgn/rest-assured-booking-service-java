@@ -8,7 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import extensions.RestAssuredExtension;
 
-import static credentials.AdminCredentials.*;
+import static credentials.RestfulBookerCredentials.ADMIN;
 import static endpoints.RestfulBookerEndpoint.BOOKING_BY_ID;
 import static error_messages.ResponseErrorMessage.FORBIDDEN;
 import static error_messages.ResponseErrorMessage.METHOD_NOT_ALLOWED;
@@ -17,14 +17,15 @@ import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
+import static specifications.RequestSpecifications.CONTENT_TYPE_AND_AUTH_SPEC;
 import static utils.Steps.createBookingStep;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("deleteBooking: негативные кейсы")
-class DeleteBookingNegativeTests {
+class NegativeTests {
 
     @ParameterizedTest
-    @DisplayName("deleteBooking возвращает statusCode 405 если передали невалидный bookingId")
+    @DisplayName("deleteBooking возвращает верный statusCode, если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void deleteBookingReturns405IfBookingIdIsInvalid(Integer invalidBookingId) {
         parameter("Невалидный bookingId", invalidBookingId);
@@ -33,8 +34,7 @@ class DeleteBookingNegativeTests {
                 String.format("Удаление бронирования по невалидному bookingId = %s", invalidBookingId),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                         when().
                                 delete(BOOKING_BY_ID, invalidBookingId).
                         then().
@@ -47,7 +47,7 @@ class DeleteBookingNegativeTests {
     }
 
     @ParameterizedTest
-    @DisplayName("deleteBooking возвращает верное сообщение об ошибке если передали невалидный bookingId")
+    @DisplayName("deleteBooking возвращает верное сообщение об ошибке, если передали невалидный bookingId")
     @ValueSource(ints = { 0, -1 })
     void deleteBookingReturnsErrorMessageIfBookingIdIsInvalid(Integer invalidBookingId) {
         parameter("Невалидный bookingId", invalidBookingId);
@@ -56,8 +56,7 @@ class DeleteBookingNegativeTests {
                 String.format("Удаление бронирования по невалидному bookingId = '%s'", invalidBookingId),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                         when().
                                 delete(BOOKING_BY_ID, invalidBookingId).
                         then().
@@ -70,7 +69,7 @@ class DeleteBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("deleteBooking возвращает statusCode 405 если передали несуществующий bookingId")
+    @DisplayName("deleteBooking возвращает верный statusCode, если передали несуществующий bookingId")
     void deleteBookingReturns405IfBookingIdIsNonexistent() {
         var nonExistentId = Integer.MAX_VALUE;
 
@@ -78,8 +77,7 @@ class DeleteBookingNegativeTests {
                 String.format("Удаление бронирования по несуществующему bookingId = %s", nonExistentId),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                         when().
                                 delete(BOOKING_BY_ID, nonExistentId).
                         then().
@@ -92,7 +90,7 @@ class DeleteBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("deleteBooking возвращает верное сообщение об ошибке если передали несуществующий bookingId")
+    @DisplayName("deleteBooking возвращает верное сообщение об ошибке, если передали несуществующий bookingId")
     void deleteBookingReturnsErrorMessageIfBookingIdIsNonexistent() {
         var nonExistentId = Integer.MAX_VALUE;
 
@@ -100,8 +98,7 @@ class DeleteBookingNegativeTests {
                 String.format("Удаление бронирования по несуществующему bookingId = %s", nonExistentId),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                         when().
                                 delete(BOOKING_BY_ID, nonExistentId).
                         then().
@@ -114,7 +111,7 @@ class DeleteBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("deleteBooking возвращает statusCode 403 если пользователь не авторизован")
+    @DisplayName("deleteBooking возвращает верный statusCode, если пользователь не авторизован")
     void deleteBookingReturns403IfUserIsNotAuthorized() {
         var booking = Booking.Builder().build();
         var createBookingResponse = step("Создание нового бронирования", () -> createBookingStep(booking));
@@ -137,7 +134,7 @@ class DeleteBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("deleteBooking возвращает верное сообщение об ошибке если пользователь не авторизован")
+    @DisplayName("deleteBooking возвращает верное сообщение об ошибке, если пользователь не авторизован")
     void deleteBookingReturnsErrorMessageIfUserIsNotAuthorized() {
         var booking = Booking.Builder().build();
         var createBookingResponse = step("Создание нового бронирования", () -> createBookingStep(booking));

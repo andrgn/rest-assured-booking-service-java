@@ -24,10 +24,10 @@ import static utils.Steps.createBookingDataWithCheckoutStep;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("createBooking: позитивные кейсы")
-class CreateBookingPositiveTests {
+class PositiveTests {
 
     @Test
-    @DisplayName("createBooking возвращает statusCode 200")
+    @DisplayName("createBooking возвращает верный statusCode, если создать бронирование с валидными параметрами")
     void createBookingReturns200() {
         var booking = Booking.Builder().build();
 
@@ -47,7 +47,7 @@ class CreateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("createBooking возвращает верный firstname")
+    @DisplayName("createBooking возвращает верный firstname, если создать бронирование с валидными параметрами")
     @ValueSource(strings = { "Bill", "Дмитрий" })
     void createBookingReturnsCorrectFirstname(String expectedFirstname) {
         parameter("firstname", expectedFirstname);
@@ -74,7 +74,7 @@ class CreateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("createBooking возвращает верный lastname")
+    @DisplayName("createBooking возвращает верный lastname, если создать бронирование с валидными параметрами")
     @ValueSource(strings = { "Jackson", "Петров" })
     void createBookingReturnsCorrectLastname(String expectedLastname) {
         parameter("lastname", expectedLastname);
@@ -101,7 +101,7 @@ class CreateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("createBooking возвращает верный additionalneeds")
+    @DisplayName("createBooking возвращает верный additionalneeds, если создать бронирование с валидными параметрами")
     @ValueSource(strings = {
             "Breakfast",
             "Breakfast, lunch, dinner",
@@ -133,7 +133,7 @@ class CreateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("createBooking возвращает верный totalprice")
+    @DisplayName("createBooking возвращает верный totalprice, если создать бронирование с валидными параметрами")
     @ValueSource(ints = { 0, 5, 100, 5_000_000 })
     void createBookingReturnsCorrectTotalPrice(Integer expectedTotalPrice) {
         parameter("totalprice", expectedTotalPrice);
@@ -160,7 +160,7 @@ class CreateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("createBooking возвращает верный depositpaid")
+    @DisplayName("createBooking возвращает верный depositpaid, если создать бронирование с валидными параметрами")
     @ValueSource(booleans = { true, false })
     void createBookingReturnsCorrectDepositPaid(Boolean expectedDepositPaid) {
         parameter("depositpaid", expectedDepositPaid);
@@ -187,7 +187,7 @@ class CreateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("createBooking возвращает верный bookingdates.checkin")
+    @DisplayName("createBooking возвращает верный bookingdates.checkin, если создать бронирование с валидными параметрами")
     @MethodSource("checkinProvider")
     void createBookingReturnsCorrectCheckin(LocalDate expectedCheckin) {
         parameter("checkin", expectedCheckin);
@@ -224,7 +224,7 @@ class CreateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("createBooking возвращает верный bookingdates.checkout")
+    @DisplayName("createBooking возвращает верный bookingdates.checkout, если создать бронирование с валидными параметрами")
     @MethodSource("checkoutProvider")
     void createBookingReturnsCorrectCheckout(LocalDate expectedCheckout) {
         parameter("checkout", expectedCheckout);
