@@ -6,20 +6,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import extensions.RestAssuredExtension;
 
-import static credentials.AdminCredentials.*;
+import static credentials.RestfulBookerCredentials.ADMIN;
 import static endpoints.RestfulBookerEndpoint.BOOKING_BY_ID;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
+import static specifications.RequestSpecifications.CONTENT_TYPE_AND_AUTH_SPEC;
 import static utils.Steps.createBookingStep;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("deleteBooking: позитивные кейсы")
-class DeleteBookingPositiveTests {
+class PositiveTests {
 
     @Test
-    @DisplayName("deleteBooking возвращает 201")
+    @DisplayName("deleteBooking возвращает верный statusCode, если удалить существующее бронирование")
     void deleteBookingReturns201() {
         var booking = Booking.Builder().build();
         var createBookingResponse = step("Создание нового бронирования", () -> createBookingStep(booking));
@@ -29,8 +30,7 @@ class DeleteBookingPositiveTests {
                 "Удаление созданного бронирования",
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                         when().
                                 delete(BOOKING_BY_ID, bookingId).
                         then().

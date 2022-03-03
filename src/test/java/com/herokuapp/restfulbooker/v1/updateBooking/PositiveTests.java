@@ -13,21 +13,22 @@ import entities.Booking;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
-import static credentials.AdminCredentials.*;
+import static credentials.RestfulBookerCredentials.ADMIN;
 import static endpoints.RestfulBookerEndpoint.BOOKING_BY_ID;
 import static io.qameta.allure.Allure.*;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static specifications.RequestSpecifications.CONTENT_TYPE_AND_AUTH_SPEC;
 import static utils.Steps.*;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("updateBooking: позитивные кейсы")
-class UpdateBookingPositiveTests {
+class PositiveTests {
 
     @Test
-    @DisplayName("updateBooking возвращает statusCode 200")
+    @DisplayName("updateBooking возвращает верный statusCode, если обновить существующее бронирование")
     void updateBookingReturns200() {
         var booking = Booking.Builder()
                 .setFirstname("Bill")
@@ -43,8 +44,7 @@ class UpdateBookingPositiveTests {
 
         var actualStatusCode = step("Обновление созданного бронирования с новым firstname = 'John'", () ->
                 given().
-                        contentType(JSON).
-                        auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                        spec(CONTENT_TYPE_AND_AUTH_SPEC).
                         body(updatedBooking).
                 when().
                         put(BOOKING_BY_ID, bookingId).
@@ -58,7 +58,7 @@ class UpdateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("updateBooking возвращает обновленный firstname")
+    @DisplayName("updateBooking возвращает обновленный firstname, если обновить существующее бронирование")
     @CsvSource({
             "Bill, John",
             "Bill, Дмитрий"
@@ -83,8 +83,7 @@ class UpdateBookingPositiveTests {
                 String.format("Обновление созданного бронирования с новым firstname = '%s'", expectedFirstname),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                                 body(updatedBooking).
                         when().
                                 put(BOOKING_BY_ID, bookingId).
@@ -99,7 +98,7 @@ class UpdateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("updateBooking возвращает обновленный lastname")
+    @DisplayName("updateBooking возвращает обновленный lastname, если обновить существующее бронирование")
     @CsvSource({
             "Jackson, Smith",
             "Jackson, Иванов"
@@ -124,8 +123,7 @@ class UpdateBookingPositiveTests {
                 String.format("Обновление созданного бронирования с новым lastname = '%s'", expectedLastname),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                                 body(updatedBooking).
                         when().
                                 put(BOOKING_BY_ID, bookingId).
@@ -140,7 +138,7 @@ class UpdateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("updateBooking возвращает обновленный additionalneeds")
+    @DisplayName("updateBooking возвращает обновленный additionalneeds, если обновить существующее бронирование")
     @CsvSource({
             "'Old additional needs', Breakfast",
             "'Old additional needs', Завтрак",
@@ -167,8 +165,7 @@ class UpdateBookingPositiveTests {
                 String.format("Обновление созданного бронирования с новым additionalneeds = '%s'", expectedAdditionalNeeds),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                                 body(updatedBooking).
                         when().
                                 put(BOOKING_BY_ID, bookingId).
@@ -183,7 +180,7 @@ class UpdateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("updateBooking возвращает обновленный totalprice")
+    @DisplayName("updateBooking возвращает обновленный totalprice, если обновить существующее бронирование")
     @CsvSource({
         "1_000, 0",
         "1_000, 5",
@@ -210,8 +207,7 @@ class UpdateBookingPositiveTests {
                 String.format("Обновление созданного бронирования с новым totalprice = %d", expectedTotalPrice),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                                 body(updatedBooking).
                         when().
                                 put(BOOKING_BY_ID, bookingId).
@@ -226,7 +222,7 @@ class UpdateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("updateBooking возвращает обновленный depositpaid")
+    @DisplayName("updateBooking возвращает обновленный depositpaid, если обновить существующее бронирование")
     @CsvSource({
             "true, false",
             "false, true"
@@ -251,8 +247,7 @@ class UpdateBookingPositiveTests {
                 String.format("Обновление созданного бронирования с новым depositpaid = %s", expectedDepositPaid),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                                 body(updatedBooking).
                         when().
                                 put(BOOKING_BY_ID, bookingId).
@@ -267,7 +262,7 @@ class UpdateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("updateBooking возвращает обновленный bookingdates.checkin")
+    @DisplayName("updateBooking возвращает обновленный bookingdates.checkin, если обновить существующее бронирование")
     @MethodSource("checkinProvider")
     void updateBookingReturnsUpdatedBookingDatesCheckin(LocalDate oldCheckin, LocalDate expectedCheckin) {
         parameter("старый checkin", oldCheckin);
@@ -285,8 +280,7 @@ class UpdateBookingPositiveTests {
                 String.format("Обновление созданного бронирования с новым bookingdates.checkin = '%s'", expectedCheckin),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                                 body(updatedBooking).
                         when().
                                 put(BOOKING_BY_ID, bookingId).
@@ -310,7 +304,7 @@ class UpdateBookingPositiveTests {
     }
 
     @ParameterizedTest
-    @DisplayName("updateBooking возвращает обновленный bookingdates.checkout")
+    @DisplayName("updateBooking возвращает обновленный bookingdates.checkout, если обновить существующее бронирование")
     @MethodSource("checkoutProvider")
     void updateBookingReturnsUpdatedBookingDatesCheckout(LocalDate oldCheckout, LocalDate expectedCheckout) {
         parameter("старый checkout", oldCheckout);
@@ -328,8 +322,7 @@ class UpdateBookingPositiveTests {
                 String.format("Обновление созданного бронирования с новым bookingdates.checkout = '%s'", expectedCheckout),
                 () ->
                         given().
-                                contentType(JSON).
-                                auth().preemptive().basic(ADMIN_LOGIN, ADMIN_PASSWORD).
+                                spec(CONTENT_TYPE_AND_AUTH_SPEC).
                                 body(updatedBooking).
                         when().
                                 put(BOOKING_BY_ID, bookingId).

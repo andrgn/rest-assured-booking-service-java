@@ -16,10 +16,10 @@ import static utils.Steps.createBookingDataWithCheckoutStep;
 
 @ExtendWith(RestAssuredExtension.class)
 @DisplayName("createBooking: негативные кейсы")
-class CreateBookingNegativeTests {
+class NegativeTests {
 
     @Test
-    @DisplayName("createBooking возвращает 500 если передали null для firstname")
+    @DisplayName("createBooking возвращает верный statusCode, если передали null для firstname")
     void createBookingReturns500IfFirstnameIsNull() {
         var booking = Booking.Builder()
                 .setFirstname(null)
@@ -41,13 +41,13 @@ class CreateBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("createBooking возвращает 500 если передали null для lastname")
+    @DisplayName("createBooking возвращает верный statusCode, если передали null для lastname")
     void createBookingReturns500IfLastnameIsNull() {
         var booking = Booking.Builder()
                 .setLastname(null)
                 .build();
 
-        var actualStatusCode = step("Создание бронирования с lastname = 500", () ->
+        var actualStatusCode = step("Создание бронирования с lastname = null", () ->
                 given().
                         contentType(JSON).
                         body(booking).
@@ -63,7 +63,7 @@ class CreateBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("createBooking возвращает 500 если передали null для depositpaid")
+    @DisplayName("createBooking возвращает верный statusCode, если передали null для depositpaid")
     void createBookingReturns500IfDepositPaidIsNull() {
         var booking = Booking.Builder()
                 .setDepositPaid(null)
@@ -85,7 +85,7 @@ class CreateBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("createBooking возвращает 500 если передали null для bookingdates")
+    @DisplayName("createBooking возвращает верный statusCode, если передали null для bookingdates")
     void createBookingReturns500IfBookingDatesIsNull() {
         var booking = Booking.Builder()
                 .setBookingDates(null)
@@ -107,7 +107,7 @@ class CreateBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("createBooking возвращает 500 если передали null для bookingdates.checkin")
+    @DisplayName("createBooking возвращает верный statusCode, если передали null для bookingdates.checkin")
     void createBookingReturns500IfBookingDatesCheckinIsNull() {
         var booking = createBookingDataWithCheckinStep(null);
 
@@ -127,7 +127,7 @@ class CreateBookingNegativeTests {
     }
 
     @Test
-    @DisplayName("createBooking возвращает 500 если передали null для bookingdates.checkout")
+    @DisplayName("createBooking возвращает верный statusCode, если передали null для bookingdates.checkout")
     void createBookingReturns500IfBookingDatesCheckoutIsNull() {
         var booking = createBookingDataWithCheckoutStep(null);
 
