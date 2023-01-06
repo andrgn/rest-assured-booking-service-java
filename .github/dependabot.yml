@@ -11,8 +11,8 @@ updates:
       interval: "daily"
       time: "23:47"
       timezone: "Asia/Novosibirsk"
-  open-pull-requests-limit: 10
-  commit-message:
-    prefix: "Update: "
-  ignore:
-    - dependency-name: "org.slf4j:slf4j-api"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "Update: "
+    ignore:
+      - dependency-name: "org.slf4j:slf4j-api"
