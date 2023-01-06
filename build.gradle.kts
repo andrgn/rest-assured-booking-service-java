@@ -16,7 +16,7 @@ val allureVersion = "2.17.2"
 
 dependencies {
     // slf4j to avoid warning http://www.slf4j.org/codes.html#StaticLoggerBinder
-    val slf4jVersion = "1.7.32"
+    val slf4jVersion = "2.0.6"
     runtimeOnly("org.slf4j:slf4j-api:$slf4jVersion")
     runtimeOnly("org.slf4j:slf4j-simple:$slf4jVersion")
 
