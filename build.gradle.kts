@@ -21,7 +21,7 @@ dependencies {
     runtimeOnly("org.slf4j:slf4j-simple:$slf4jVersion")
 
     // JUnit5
-    val junit5Version = "5.8.2"
+    val junit5Version = "5.9.1"
     implementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
     implementation("org.junit.jupiter:junit-jupiter-params:$junit5Version")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
