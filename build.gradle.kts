@@ -37,7 +37,7 @@ dependencies {
 
     // Other
     implementation("io.rest-assured:rest-assured:4.4.0")
-    testImplementation("org.assertj:assertj-core:3.22.0")
+    testImplementation("org.assertj:assertj-core:3.24.1")
 }
 
 allure {
