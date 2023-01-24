@@ -36,7 +36,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
 
     // Other
-    implementation("io.rest-assured:rest-assured:4.4.0")
+    implementation("io.rest-assured:rest-assured:5.3.0")
     testImplementation("org.assertj:assertj-core:3.24.2")
 }
 
