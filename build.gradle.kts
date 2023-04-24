@@ -31,7 +31,7 @@ dependencies {
     implementation("io.qameta.allure:allure-junit5:$allureVersion")
 
     // Jackson
-    val jacksonVersion = "2.13.1"
+    val jacksonVersion = "2.15.0"
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
     implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
 
