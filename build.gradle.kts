@@ -12,7 +12,7 @@ repositories {
     mavenCentral()
 }
 
-val allureVersion = "2.17.2"
+val allureVersion = "2.22.0"
 
 dependencies {
     // slf4j to avoid warning http://www.slf4j.org/codes.html#StaticLoggerBinder
